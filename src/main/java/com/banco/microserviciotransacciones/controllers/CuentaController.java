@@ -6,6 +6,7 @@ package com.banco.microserviciotransacciones.controllers;
 
 import com.banco.microserviciotransacciones.exceptions.ResourceNotFoundException;
 import com.banco.microserviciotransacciones.models.entity.Cuenta;
+import com.banco.microserviciotransacciones.models.entity.Movimiento;
 import com.banco.microserviciotransacciones.service.CuentaService;
 
 import java.util.Optional;
@@ -73,8 +74,13 @@ public class CuentaController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> eliminar(@PathVariable Integer id) {
-        service.deleteById(id);
-        return ResponseEntity.noContent().build();
+        Optional<Cuenta> cuentaOptional = service.findById(id);
+        if (cuentaOptional.isPresent()) {
+            service.deleteById(id);
+            return ResponseEntity.noContent().build();
+        } else {
+            throw new ResourceNotFoundException("Cuenta con ID " + id + " no encontrada.");
+        }
     }
 
 }

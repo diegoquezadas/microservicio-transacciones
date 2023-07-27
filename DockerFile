@@ -1,0 +1,6 @@
+
+FROM openjdk:8-jre-slim
+WORKDIR /app
+COPY target/microservicio-transacciones.jar /app/microservicio-transacciones.jar
+EXPOSE 8080
+CMD ["java", "-jar", "microservicio-transacciones.jar"]

@@ -14,9 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -43,8 +41,6 @@ public class Cuenta implements Serializable {
     @JoinColumn(name = "cliente", referencedColumnName = "id")
     @ManyToOne
     private Cliente cliente;
-    @OneToMany(mappedBy = "cuenta")
-    private List<Movimiento> movimientosList;
 
     public Cuenta() {
     }
@@ -101,14 +97,6 @@ public class Cuenta implements Serializable {
         this.cliente = cliente;
     }
 
-    @XmlTransient
-    public List<Movimiento> getMovimientosList() {
-        return movimientosList;
-    }
-
-    public void setMovimientosList(List<Movimiento> movimientosList) {
-        this.movimientosList = movimientosList;
-    }
 
     @Override
     public int hashCode() {

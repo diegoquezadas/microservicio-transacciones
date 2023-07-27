@@ -111,8 +111,13 @@ public class MovimientoController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> eliminar(@PathVariable Integer id) {
-        service.deleteById(id);
-        return ResponseEntity.noContent().build();
+        Optional<Movimiento> movimientoOptional = service.findById(id);
+        if (movimientoOptional.isPresent()) {
+            service.deleteById(id);
+            return ResponseEntity.noContent().build();
+        } else {
+            throw new ResourceNotFoundException("Movimiento con ID " + id + " no encontrada.");
+        }
     }
 
 }

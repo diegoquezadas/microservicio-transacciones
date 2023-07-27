@@ -6,6 +6,7 @@ package com.banco.microserviciotransacciones.controllers;
 
 import com.banco.microserviciotransacciones.exceptions.ResourceNotFoundException;
 import com.banco.microserviciotransacciones.models.entity.Cliente;
+import com.banco.microserviciotransacciones.models.entity.Cuenta;
 import com.banco.microserviciotransacciones.service.ClienteService;
 
 import java.util.Optional;
@@ -75,8 +76,13 @@ public class ClienteController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> eliminar(@PathVariable Integer id) {
-        service.deleteById(id);
-        return ResponseEntity.noContent().build();
+        Optional<Cliente> clienteOptional = service.findById(id);
+        if (clienteOptional.isPresent()) {
+            service.deleteById(id);
+            return ResponseEntity.noContent().build();
+        } else {
+            throw new ResourceNotFoundException("Cliente con ID " + id + " no encontrado.");
+        }
     }
 
 }
