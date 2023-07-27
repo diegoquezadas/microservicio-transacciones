@@ -4,13 +4,15 @@
  */
 package com.banco.microserviciotransacciones.models.repository;
 
-import com.banco.microserviciotransacciones.models.entity.Clientes;
-import org.springframework.data.repository.CrudRepository;
+import com.banco.microserviciotransacciones.models.entity.Cuenta;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 /**
  *
  * @author diegoquezada
  */
-public interface ClientesRepository extends CrudRepository<Clientes, Integer>  {
+@Repository
+public interface CuentaRepository extends JpaRepository<Cuenta, Integer>{
     
 }

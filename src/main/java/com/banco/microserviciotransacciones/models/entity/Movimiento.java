@@ -14,12 +14,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
@@ -27,14 +24,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @Entity
 @Table(name = "movimientos")
-@NamedQueries({
-    @NamedQuery(name = "Movimientos.findAll", query = "SELECT m FROM Movimientos m"),
-    @NamedQuery(name = "Movimientos.findById", query = "SELECT m FROM Movimientos m WHERE m.id = :id"),
-    @NamedQuery(name = "Movimientos.findByFecha", query = "SELECT m FROM Movimientos m WHERE m.fecha = :fecha"),
-    @NamedQuery(name = "Movimientos.findByTipoMovimiento", query = "SELECT m FROM Movimientos m WHERE m.tipoMovimiento = :tipoMovimiento"),
-    @NamedQuery(name = "Movimientos.findByValor", query = "SELECT m FROM Movimientos m WHERE m.valor = :valor"),
-    @NamedQuery(name = "Movimientos.findBySaldo", query = "SELECT m FROM Movimientos m WHERE m.saldo = :saldo")})
-public class Movimientos implements Serializable {
+public class Movimiento implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -53,12 +43,12 @@ public class Movimientos implements Serializable {
     private Integer saldo;
     @JoinColumn(name = "cuenta", referencedColumnName = "id")
     @ManyToOne
-    private Cuentas cuenta;
+    private Cuenta cuenta;
 
-    public Movimientos() {
+    public Movimiento() {
     }
 
-    public Movimientos(Integer id) {
+    public Movimiento(Integer id) {
         this.id = id;
     }
 
@@ -102,11 +92,11 @@ public class Movimientos implements Serializable {
         this.saldo = saldo;
     }
 
-    public Cuentas getCuenta() {
+    public Cuenta getCuenta() {
         return cuenta;
     }
 
-    public void setCuenta(Cuentas cuenta) {
+    public void setCuenta(Cuenta cuenta) {
         this.cuenta = cuenta;
     }
 
@@ -120,10 +110,10 @@ public class Movimientos implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Movimientos)) {
+        if (!(object instanceof Movimiento)) {
             return false;
         }
-        Movimientos other = (Movimientos) object;
+        Movimiento other = (Movimiento) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }

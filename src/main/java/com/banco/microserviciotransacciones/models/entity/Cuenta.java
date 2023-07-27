@@ -14,11 +14,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 /**
@@ -27,14 +24,7 @@ import javax.xml.bind.annotation.XmlTransient;
  */
 @Entity
 @Table(name = "cuentas")
-@NamedQueries({
-    @NamedQuery(name = "Cuentas.findAll", query = "SELECT c FROM Cuentas c"),
-    @NamedQuery(name = "Cuentas.findById", query = "SELECT c FROM Cuentas c WHERE c.id = :id"),
-    @NamedQuery(name = "Cuentas.findByNumeroCuenta", query = "SELECT c FROM Cuentas c WHERE c.numeroCuenta = :numeroCuenta"),
-    @NamedQuery(name = "Cuentas.findBySaldoInicial", query = "SELECT c FROM Cuentas c WHERE c.saldoInicial = :saldoInicial"),
-    @NamedQuery(name = "Cuentas.findByTipoCuenta", query = "SELECT c FROM Cuentas c WHERE c.tipoCuenta = :tipoCuenta"),
-    @NamedQuery(name = "Cuentas.findByEstado", query = "SELECT c FROM Cuentas c WHERE c.estado = :estado")})
-public class Cuentas implements Serializable {
+public class Cuenta implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -52,14 +42,14 @@ public class Cuentas implements Serializable {
     private Boolean estado;
     @JoinColumn(name = "cliente", referencedColumnName = "id")
     @ManyToOne
-    private Clientes cliente;
+    private Cliente cliente;
     @OneToMany(mappedBy = "cuenta")
-    private List<Movimientos> movimientosList;
+    private List<Movimiento> movimientosList;
 
-    public Cuentas() {
+    public Cuenta() {
     }
 
-    public Cuentas(Integer id) {
+    public Cuenta(Integer id) {
         this.id = id;
     }
 
@@ -103,20 +93,20 @@ public class Cuentas implements Serializable {
         this.estado = estado;
     }
 
-    public Clientes getCliente() {
+    public Cliente getCliente() {
         return cliente;
     }
 
-    public void setCliente(Clientes cliente) {
+    public void setCliente(Cliente cliente) {
         this.cliente = cliente;
     }
 
     @XmlTransient
-    public List<Movimientos> getMovimientosList() {
+    public List<Movimiento> getMovimientosList() {
         return movimientosList;
     }
 
-    public void setMovimientosList(List<Movimientos> movimientosList) {
+    public void setMovimientosList(List<Movimiento> movimientosList) {
         this.movimientosList = movimientosList;
     }
 
@@ -130,10 +120,10 @@ public class Cuentas implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Cuentas)) {
+        if (!(object instanceof Cuenta)) {
             return false;
         }
-        Cuentas other = (Cuentas) object;
+        Cuenta other = (Cuenta) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }

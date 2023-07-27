@@ -2,10 +2,10 @@
 <persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
   <persistence-unit name="com.banco_microservicio-transacciones_jar_0.0.1-SNAPSHOTPU" transaction-type="RESOURCE_LOCAL">
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-    <class>com.banco.microserviciotransacciones.models.entity.Movimientos</class>
-    <class>com.banco.microserviciotransacciones.models.entity.Clientes</class>
-    <class>com.banco.microserviciotransacciones.models.entity.Cuentas</class>
-    <class>com.banco.microserviciotransacciones.models.entity.Personas</class>
+    <class>com.banco.microserviciotransacciones.models.entity.Cliente</class>
+    <class>com.banco.microserviciotransacciones.models.entity.Cuenta</class>
+    <class>com.banco.microserviciotransacciones.models.entity.Movimiento</class>
+    <class>com.banco.microserviciotransacciones.models.entity.Persona</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/banco"/>
       <property name="javax.persistence.jdbc.user" value="postgres"/>

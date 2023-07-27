@@ -4,26 +4,13 @@
  */
 package com.banco.microserviciotransacciones.models.entity;
 
-import java.io.Serializable;
-import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -31,12 +18,7 @@ import javax.xml.bind.annotation.XmlTransient;
  */
 @Entity
 @Table(name = "clientes")
-@NamedQueries({
-    @NamedQuery(name = "Clientes.findAll", query = "SELECT c FROM Clientes c"),
-    @NamedQuery(name = "Clientes.findById", query = "SELECT c FROM Clientes c WHERE c.id = :id"),
-    @NamedQuery(name = "Clientes.findByContrasenia", query = "SELECT c FROM Clientes c WHERE c.contrasenia = :contrasenia"),
-    @NamedQuery(name = "Clientes.findByEstado", query = "SELECT c FROM Clientes c WHERE c.estado = :estado")})
-public class Clientes extends Personas implements Serializable {
+public class Cliente extends Persona {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -48,16 +30,12 @@ public class Clientes extends Personas implements Serializable {
     private String contrasenia;
     @Column(name = "estado")
     private Boolean estado;
-    @OneToMany(mappedBy = "cliente")
-    private List<Cuentas> cuentasList;
-    @JoinColumn(name = "persona", referencedColumnName = "id")
-    @ManyToOne
-    private Personas persona;
 
-    public Clientes() {
+
+    public Cliente() {
     }
 
-    public Clientes(Integer id) {
+    public Cliente(Integer id) {
         this.id = id;
     }
 
@@ -85,22 +63,6 @@ public class Clientes extends Personas implements Serializable {
         this.estado = estado;
     }
 
-    @XmlTransient
-    public List<Cuentas> getCuentasList() {
-        return cuentasList;
-    }
-
-    public void setCuentasList(List<Cuentas> cuentasList) {
-        this.cuentasList = cuentasList;
-    }
-
-    public Personas getPersona() {
-        return persona;
-    }
-
-    public void setPersona(Personas persona) {
-        this.persona = persona;
-    }
 
     @Override
     public int hashCode() {
@@ -112,10 +74,10 @@ public class Clientes extends Personas implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Clientes)) {
+        if (!(object instanceof Cliente)) {
             return false;
         }
-        Clientes other = (Clientes) object;
+        Cliente other = (Cliente) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
