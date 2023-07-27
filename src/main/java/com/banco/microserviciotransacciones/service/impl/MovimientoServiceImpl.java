@@ -6,6 +6,7 @@ package com.banco.microserviciotransacciones.service.impl;
 
 import com.banco.microserviciotransacciones.models.entity.Cuenta;
 import com.banco.microserviciotransacciones.models.entity.Movimiento;
+import com.banco.microserviciotransacciones.models.repository.CuentaRepository;
 import com.banco.microserviciotransacciones.models.repository.MovimientoRepository;
 import com.banco.microserviciotransacciones.service.MovimientoService;
 
@@ -47,10 +48,8 @@ public class MovimientoServiceImpl implements MovimientoService {
 
     }
 
-
     @Override
     public List<Movimiento> findByCuenta(Cuenta cuenta) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findByCuenta'");
+        return repository.findByCuenta(cuenta);
     }
 }

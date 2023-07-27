@@ -8,6 +8,7 @@ import com.banco.microserviciotransacciones.exceptions.BadRequestException;
 import com.banco.microserviciotransacciones.exceptions.ResourceNotFoundException;
 import com.banco.microserviciotransacciones.models.entity.Cuenta;
 import com.banco.microserviciotransacciones.models.entity.Movimiento;
+import com.banco.microserviciotransacciones.service.CuentaService;
 import com.banco.microserviciotransacciones.service.MovimientoService;
 
 import java.util.List;
@@ -32,45 +33,57 @@ import org.springframework.web.bind.annotation.RestController;
 public class MovimientoController {
 
     private MovimientoService service;
+    private final CuentaService cuentaService;
 
-    public MovimientoController(MovimientoService service) {
+    public MovimientoController(MovimientoService service, CuentaService cuentaService) {
         this.service = service;
+        this.cuentaService = cuentaService;
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> ver(@PathVariable Integer id) {
         Optional<Movimiento> o = service.findById(id);
         if (o.isPresent()) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.ok().body(o.get());
+        } else {
+            throw new ResourceNotFoundException("Movimiento con ID " + id + " no encontrado.");
         }
-        return ResponseEntity.ok().body(o.get());
     }
 
     @PostMapping
     public ResponseEntity<?> crear(@RequestBody Movimiento movimiento) {
         Cuenta cuenta = movimiento.getCuenta();
         if (cuenta != null) {
-            int saldoAnterior = obtenerSaldoAnterior(cuenta);
-            realizarMovimiento(movimiento, saldoAnterior);
-            Movimiento movimientoDb = service.save(movimiento);
-            return ResponseEntity.status(HttpStatus.OK).body(movimientoDb);
+            Optional<Cuenta> cuentaOptional = cuentaService.findById(cuenta.getId());
+            if (cuentaOptional.isPresent()) {
+                int saldoAnterior = obtenerSaldoAnterior(cuenta);
+                realizarMovimiento(movimiento, saldoAnterior);
+                Movimiento movimientoDb = service.save(movimiento);
+                return ResponseEntity.status(HttpStatus.OK).body(movimientoDb);
+            } else {
+                throw new ResourceNotFoundException("No se encontró la cuenta del movimiento");
+            }
         } else {
             throw new BadRequestException("Falta número de cuenta");
         }
-
     }
 
     private int obtenerSaldoAnterior(Cuenta cuenta) {
-        List<Movimiento> movimientosAnteriores = service.findByCuenta(cuenta);
-        if (movimientosAnteriores.isEmpty()) {
-            // Primer movimiento, tomar el saldo inicial
-            return cuenta.getSaldoInicial();
+        Optional<Cuenta> cuentaOptional = cuentaService.findById(cuenta.getId());
+        if (cuentaOptional.isPresent()) {
+            Cuenta cuentaDb = cuentaOptional.get();
+            int saldoAnterior = cuentaDb.getSaldoInicial() != null ? cuentaDb.getSaldoInicial() : 0;
+
+            List<Movimiento> movimientosAnteriores = service.findByCuenta(cuentaDb);
+            if (movimientosAnteriores != null && !movimientosAnteriores.isEmpty()) {
+                saldoAnterior += movimientosAnteriores.stream()
+                        .mapToInt(Movimiento::getValor)
+                        .sum();
+            }
+
+            return saldoAnterior;
         } else {
-            // Calcular el saldo anterior sumando todos los valores de los movimientos
-            // anteriores
-            return movimientosAnteriores.stream()
-                    .mapToInt(Movimiento::getValor)
-                    .sum();
+            throw new ResourceNotFoundException("No se encontró la cuenta");
         }
     }
 
@@ -78,13 +91,13 @@ public class MovimientoController {
         String tipoMovimiento = movimiento.getTipoMovimiento();
         int valor = movimiento.getValor();
 
-        if (tipoMovimiento.equals("DEBITO")) {
-            if (saldoAnterior == 0) {
+        if ("DEBITO".equals(tipoMovimiento)) {
+            if (saldoAnterior < valor) {
                 throw new IllegalArgumentException("Saldo no disponible");
             }
-            valor = -Math.abs(valor);
-        } else if (tipoMovimiento.equals("DEPOSITO")) {
-            valor = Math.abs(valor);
+            valor = -valor;
+        } else if (!"DEPOSITO".equals(tipoMovimiento)) {
+            throw new BadRequestException("Tipo de movimiento inválido");
         }
 
         int saldoDisponible = saldoAnterior + valor;
